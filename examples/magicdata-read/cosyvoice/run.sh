@@ -2,17 +2,23 @@
 # Copyright 2024 Alibaba Inc. All Rights Reserved.
 . ./path.sh || exit 1;
 
-stage=-1
-stop_stage=3
+remove_archive=""
+if [ "$1" == --remove-archive ]; then
+  remove_archive="--remove-archive"
+  shift
+fi
+
+stage=${1:--1}
+stop_stage=${2:-3}
 
 data_url=www.openslr.org/resources/68
-data_dir=/mnt/hengwu.zty/data/tts/openslr/magicdata-read
-pretrained_model_dir=../../../pretrained_models/CosyVoice-300M
+data_dir=${3:-/mnt/lyuxiang.lx/data/tts/openslr/libritts}
+pretrained_model_dir=${4:-../../../pretrained_models/CosyVoice-300M}
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   echo "Data Download"
   for part in dev_set test_set train_set; do
-    local/download_and_untar.sh ${data_dir} ${data_url} ${part}
+    local/download_and_untar.sh ${remove_archive} ${data_dir} ${data_url} ${part}
   done
 fi
 
